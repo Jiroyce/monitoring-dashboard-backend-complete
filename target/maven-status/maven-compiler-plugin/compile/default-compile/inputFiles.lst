@@ -1,0 +1,10 @@
+C:\Users\aissa\monitoring-dashboard-backend-complete\src\main\java\com\gutouch\monitoring\config\BigtableConfig.java
+C:\Users\aissa\monitoring-dashboard-backend-complete\src\main\java\com\gutouch\monitoring\dto\TraceDTO.java
+C:\Users\aissa\monitoring-dashboard-backend-complete\src\main\java\com\gutouch\monitoring\dto\AnalyticsDTO.java
+C:\Users\aissa\monitoring-dashboard-backend-complete\src\main\java\com\gutouch\monitoring\service\BigtableService.java
+C:\Users\aissa\monitoring-dashboard-backend-complete\src\main\java\com\gutouch\monitoring\MonitoringDashboardApplication.java
+C:\Users\aissa\monitoring-dashboard-backend-complete\src\main\java\com\gutouch\monitoring\config\OpenAPIConfig.java
+C:\Users\aissa\monitoring-dashboard-backend-complete\src\main\java\com\gutouch\monitoring\config\CorsConfig.java
+C:\Users\aissa\monitoring-dashboard-backend-complete\src\main\java\com\gutouch\monitoring\dto\LogDTO.java
+C:\Users\aissa\monitoring-dashboard-backend-complete\src\main\java\com\gutouch\monitoring\service\MetricsService.java
+C:\Users\aissa\monitoring-dashboard-backend-complete\src\main\java\com\gutouch\monitoring\dto\MetricsDTO.java
