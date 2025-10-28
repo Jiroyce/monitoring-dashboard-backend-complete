@@ -12,14 +12,12 @@ import java.util.Map;
 
 
 
-
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PeriodComparisonDTO {
-    private PeriodMetricsDTO period1;
-    private PeriodMetricsDTO period2;
-    private MetricChangesDTO changes;
+public class TrendDataPointDTO {
+    private ZonedDateTime timestamp;
+    private double value;
+    private String label;           // "27 Oct"
 }

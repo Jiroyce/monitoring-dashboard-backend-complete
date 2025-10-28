@@ -13,13 +13,12 @@ import java.util.Map;
 
 
 
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PeriodComparisonDTO {
-    private PeriodMetricsDTO period1;
-    private PeriodMetricsDTO period2;
-    private MetricChangesDTO changes;
+public class ComparisonDTO {
+    private String winner;          // "pi-gateway" or "pi-connector"
+    private String reason;
+    private Map<String, Double> differences;  // metric -> % difference
 }

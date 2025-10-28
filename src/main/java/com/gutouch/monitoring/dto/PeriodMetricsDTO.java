@@ -9,17 +9,22 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
+// ============================================================================
+// PERIOD COMPARISON
+// ============================================================================
 
 
-// ============================================================================
-// HEATMAP
-// ============================================================================
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeatmapDTO {
-    private List<DayHeatmapDTO> days;
-    private List<String> insights;
+public class PeriodMetricsDTO {
+    private String name;
+    private long requests;
+    private double avgLatencyMs;
+    private double errorRate;
+    private double successRate;
+    private ZonedDateTime startDate;
+    private ZonedDateTime endDate;
 }

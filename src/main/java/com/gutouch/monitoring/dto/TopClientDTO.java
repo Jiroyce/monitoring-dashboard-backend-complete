@@ -11,15 +11,22 @@ import java.util.Map;
 
 
 
+
+
+
 // ============================================================================
-// HEATMAP
+// TOP CLIENTS
 // ============================================================================
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeatmapDTO {
-    private List<DayHeatmapDTO> days;
-    private List<String> insights;
+public class TopClientDTO {
+    private String clientIp;
+    private long requests;
+    private long errors;
+    private double errorRate;
+    private double avgLatencyMs;
+    private String connector;       // si filtré, sinon "all"
 }

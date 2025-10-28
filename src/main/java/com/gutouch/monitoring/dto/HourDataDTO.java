@@ -13,13 +13,13 @@ import java.util.Map;
 
 
 
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PeriodComparisonDTO {
-    private PeriodMetricsDTO period1;
-    private PeriodMetricsDTO period2;
-    private MetricChangesDTO changes;
+public class HourDataDTO {
+    private int hour;               // 0-23
+    private long requests;
+    private String level;           // "low", "medium", "high", "very_high"
+    private double avgLatencyMs;
 }

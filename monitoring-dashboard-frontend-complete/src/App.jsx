@@ -3,9 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import OverviewPage from './pages/OverviewPage';
 import LogsPage from './pages/LogsPage';
+import AnalyticsPage from './pages/AnalyticsPage';
 import ProcessingPage from './pages/ProcessingPage';
 import { Toaster } from 'react-hot-toast';
-import AnalyticsPage from './pages/AnalyticsPage';
 
 function App() {
   return (
@@ -16,9 +16,9 @@ function App() {
           <Route path="/" element={<OverviewPage />} />
           <Route path="/logs" element={<LogsPage />} />
           <Route path="/processing" element={<ProcessingPage />} />
-          <Route path="*" element={<NotFound />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/connector/:connectorName" element={<ConnectorDetailsPage />} />
+          <Route path="/alerts" element={<AlertsPlaceholder />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
     </BrowserRouter>

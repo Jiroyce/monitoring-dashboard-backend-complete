@@ -11,15 +11,12 @@ import java.util.Map;
 
 
 
-
-
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PeriodComparisonDTO {
-    private PeriodMetricsDTO period1;
-    private PeriodMetricsDTO period2;
-    private MetricChangesDTO changes;
+public class DayHeatmapDTO {
+    private String day;              // "Lun", "Mar", etc.
+    private String date;             // "2025-10-27"
+    private List<HourDataDTO> hours;
 }

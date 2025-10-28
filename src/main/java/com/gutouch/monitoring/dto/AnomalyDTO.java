@@ -12,14 +12,21 @@ import java.util.Map;
 
 
 // ============================================================================
-// HEATMAP
+// ANOMALIES
 // ============================================================================
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeatmapDTO {
-    private List<DayHeatmapDTO> days;
-    private List<String> insights;
+public class AnomalyDTO {
+    private String id;
+    private String metric;          // "error_rate", "latency", etc.
+    private double value;
+    private double threshold;
+    private String severity;        // "critical", "warning"
+    private ZonedDateTime timestamp;
+    private String description;
+    private String rootCause;
+    private String connector;
 }

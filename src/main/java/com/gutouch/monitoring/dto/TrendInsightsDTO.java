@@ -11,15 +11,14 @@ import java.util.Map;
 
 
 
-
-
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PeriodComparisonDTO {
-    private PeriodMetricsDTO period1;
-    private PeriodMetricsDTO period2;
-    private MetricChangesDTO changes;
+public class TrendInsightsDTO {
+    private double average;
+    private double min;
+    private double max;
+    private double trend;           // % change over period
+    private String summary;
 }

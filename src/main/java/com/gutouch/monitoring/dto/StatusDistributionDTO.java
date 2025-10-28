@@ -12,14 +12,14 @@ import java.util.Map;
 
 
 // ============================================================================
-// HEATMAP
+// STATUS DISTRIBUTION
 // ============================================================================
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeatmapDTO {
-    private List<DayHeatmapDTO> days;
-    private List<String> insights;
+public class StatusDistributionDTO {
+    private Map<String, StatusCategoryDTO> categories;  // "2xx", "3xx", "4xx", "5xx"
+    private List<StatusCodeDetailDTO> topCodes;         // Top 5 status codes
 }

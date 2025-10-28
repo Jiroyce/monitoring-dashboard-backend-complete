@@ -10,16 +10,15 @@ import java.util.List;
 import java.util.Map;
 
 
-
 // ============================================================================
-// HEATMAP
+// TOP ENDPOINTS
 // ============================================================================
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeatmapDTO {
-    private List<DayHeatmapDTO> days;
-    private List<String> insights;
+public class TopEndpointsDTO {
+    private String type;            // "slowest" or "errors"
+    private List<EndpointMetricsDTO> endpoints;
 }

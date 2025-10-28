@@ -12,14 +12,12 @@ import java.util.Map;
 
 
 
-
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PeriodComparisonDTO {
-    private PeriodMetricsDTO period1;
-    private PeriodMetricsDTO period2;
-    private MetricChangesDTO changes;
+public class StatusCategoryDTO {
+    private String category;        // "2xx", "4xx", etc.
+    private long count;
+    private double percentage;
 }

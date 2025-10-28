@@ -11,15 +11,20 @@ import java.util.Map;
 
 
 
+
+
+
 // ============================================================================
-// HEATMAP
+// TRENDS
 // ============================================================================
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeatmapDTO {
-    private List<DayHeatmapDTO> days;
-    private List<String> insights;
+public class TrendsDTO {
+    private String metric;
+    private List<TrendDataPointDTO> data;
+    private List<AnomalyDTO> anomalies;
+    private TrendInsightsDTO insights;
 }

@@ -11,15 +11,18 @@ import java.util.Map;
 
 
 
+
+
 // ============================================================================
-// HEATMAP
+// CONNECTOR BREAKDOWN
 // ============================================================================
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeatmapDTO {
-    private List<DayHeatmapDTO> days;
-    private List<String> insights;
+public class ConnectorBreakdownDTO {
+    private ConnectorMetricsDTO piGateway;
+    private ConnectorMetricsDTO piConnector;
+    private ComparisonDTO comparison;
 }

@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Configuration de l'API
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 const apiClient = axios.create({
@@ -11,23 +10,17 @@ const apiClient = axios.create({
   },
 });
 
-// Intercepteur pour gérer les erreurs globalement
+// Interceptor pour gérer les erreurs
 apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    console.error('API Error:', error);
-    if (error.response) {
-      // Erreur du serveur
-      console.error('Response error:', error.response.data);
-    } else if (error.request) {
-      // Pas de réponse du serveur
-      console.error('No response from server');
-    } else {
-      // Erreur de configuration
-      console.error('Request error:', error.message);
+    (response) => response,
+    (error) => {
+      console.error('API Error:', error);
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+      }
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
-  }
 );
 
 // ============================================================================
@@ -35,26 +28,21 @@ apiClient.interceptors.response.use(
 // ============================================================================
 
 export const metricsApi = {
-  /**
-   * Récupérer les métriques d'overview
-   * @param {string} timeRange - 1h, 6h, 24h, 7d, 30d
-   */
-  getOverview: (timeRange = '1h') => {
-    return apiClient.get('/metrics/overview', {
-      params: { timeRange },
-    });
-  },
+  // Get all metrics
+  getMetrics: (params) => apiClient.get('/metrics', { params }),
 
-  /**
-   * Récupérer les détails d'un connector
-   * @param {string} connectorName - pi-gateway, pi-connector
-   * @param {string} timeRange - 1h, 6h, 24h, 7d, 30d
-   */
-  getConnectorDetails: (connectorName, timeRange = '24h') => {
-    return apiClient.get(`/metrics/connector/${connectorName}`, {
-      params: { timeRange },
-    });
-  },
+  // Get metrics for specific connector
+  getConnectorMetrics: (connector, params) =>
+      apiClient.get(`/metrics/connector/${connector}`, { params }),
+
+  // Get real-time metrics
+  getRealTimeMetrics: () => apiClient.get('/metrics/realtime'),
+
+  // Get historical metrics
+  getHistoricalMetrics: (timeRange, connector) =>
+      apiClient.get('/metrics/historical', {
+        params: { timeRange, connector }
+      }),
 };
 
 // ============================================================================
@@ -62,163 +50,168 @@ export const metricsApi = {
 // ============================================================================
 
 export const logsApi = {
-  /**
-   * Rechercher des logs avec filtres
-   */
-  searchLogs: (params) => {
-    return apiClient.get('/logs/search', { params });
-  },
+  // Search logs with filters
+  searchLogs: (filters) => apiClient.post('/logs/search', filters),
 
-  /**
-   * Récupérer les logs d'erreur
-   * @param {string} connector - pi-gateway, pi-connector, all
-   * @param {number} limit - Nombre de résultats
-   */
-  getErrorLogs: (connector = 'all', limit = 50) => {
-    return apiClient.get('/logs/errors', {
-      params: { connector, limit },
-    });
-  },
+  // Get log by ID
+  getLogById: (id) => apiClient.get(`/logs/${id}`),
 
-  /**
-   * Récupérer les détails d'un log
-   * @param {string} logId - ID du log
-   */
-  getLogDetail: (logId) => {
-    return apiClient.get(`/logs/${logId}`);
-  },
+  // Get recent logs
+  getRecentLogs: (limit = 100, connector) =>
+      apiClient.get('/logs/recent', {
+        params: { limit, connector }
+      }),
+
+  // Get logs by time range
+  getLogsByTimeRange: (startTime, endTime, connector) =>
+      apiClient.get('/logs/range', {
+        params: { startTime, endTime, connector }
+      }),
+
+  // Export logs
+  exportLogs: (filters, format = 'json') =>
+      apiClient.post('/logs/export', filters, {
+        params: { format },
+        responseType: 'blob'
+      }),
 };
 
 // ============================================================================
-// PROCESSING / TRACING API
+// TRACE API
 // ============================================================================
 
-export const tracingApi = {
-  /**
-   * Tracer une transaction par messageId
-   * @param {string} messageId
-   */
-  traceByMessageId: (messageId) => {
-    return apiClient.get(`/processing/trace/${messageId}`);
-  },
+export const traceApi = {
+  // Get trace by message ID
+  getTrace: (messageId) => apiClient.get(`/trace/${messageId}`),
 
-  /**
-   * Tracer une transaction par endToEndId
-   * @param {string} endToEndId
-   */
-  traceByEndToEndId: (endToEndId) => {
-    return apiClient.get('/processing/trace', {
-      params: { endToEndId },
-    });
-  },
+  // Search traces
+  searchTraces: (params) => apiClient.get('/trace/search', { params }),
+
+  // Get trace timeline
+  getTraceTimeline: (messageId) => apiClient.get(`/trace/${messageId}/timeline`),
 };
 
 // ============================================================================
-// ANALYTICS API (à implémenter côté backend)
+// ANALYTICS API (NOUVEAUX ENDPOINTS)
 // ============================================================================
 
 export const analyticsApi = {
-  /**
-   * Comparer deux périodes
-   */
-  comparePeriods: (period1, period2) => {
-    return apiClient.get('/analytics/comparison', {
-      params: { period1, period2 },
-    });
-  },
+  // Compare two periods
+  comparePeriods: (period1, period2, connector) =>
+      apiClient.get('/analytics/comparison', {
+        params: { period1, period2, connector }
+      }),
 
-  /**
-   * Récupérer la heatmap du trafic
-   */
-  getHeatmap: (days = 7) => {
-    return apiClient.get('/analytics/heatmap', {
-      params: { days },
-    });
-  },
+  // Get traffic heatmap
+  getHeatmap: (days = 7, connector) =>
+      apiClient.get('/analytics/heatmap', {
+        params: { days, connector }
+      }),
 
-  /**
-   * Récupérer les top clients
-   */
-  getTopClients: (limit = 10) => {
-    return apiClient.get('/analytics/top-clients', {
-      params: { limit },
-    });
-  },
+  // Get top clients
+  getTopClients: (limit = 10, timeRange = '7d', connector) =>
+      apiClient.get('/analytics/top-clients', {
+        params: { limit, timeRange, connector }
+      }),
 
-  /**
-   * Récupérer les tendances d'une métrique
-   */
-  getTrends: (metric, days = 30) => {
-    return apiClient.get('/analytics/trends', {
-      params: { metric, days },
-    });
-  },
+  // Get trends for a metric
+  getTrends: (metric, days = 30, connector) =>
+      apiClient.get('/analytics/trends', {
+        params: { metric, days, connector }
+      }),
+
+  // Get connector breakdown (pi-gateway vs pi-connector)
+  getConnectorBreakdown: (timeRange = '24h') =>
+      apiClient.get('/analytics/connector-breakdown', {
+        params: { timeRange }
+      }),
+
+  // Detect anomalies
+  getAnomalies: (days = 7, connector) =>
+      apiClient.get('/analytics/anomalies', {
+        params: { days, connector }
+      }),
+
+  // Get top endpoints (slowest or most errors)
+  getTopEndpoints: (type = 'slowest', limit = 10, timeRange = '24h', connector) =>
+      apiClient.get('/analytics/top-endpoints', {
+        params: { type, limit, timeRange, connector }
+      }),
+
+  // Get status code distribution
+  getStatusDistribution: (timeRange = '24h', connector) =>
+      apiClient.get('/analytics/status-distribution', {
+        params: { timeRange, connector }
+      }),
 };
 
 // ============================================================================
-// ALERTS API (à implémenter côté backend)
+// ALERTS API (pour page Alerts - à implémenter côté backend)
 // ============================================================================
 
 export const alertsApi = {
-  /**
-   * Récupérer les alertes actives
-   */
-  getActiveAlerts: () => {
-    return apiClient.get('/alerts/active');
-  },
+  // Get active alerts
+  getActiveAlerts: (params) =>
+      apiClient.get('/alerts/active', { params }),
 
-  /**
-   * Récupérer les règles d'alerte
-   */
-  getAlertRules: () => {
-    return apiClient.get('/alerts/rules');
-  },
+  // Get alert by ID
+  getAlertById: (id) =>
+      apiClient.get(`/alerts/${id}`),
 
-  /**
-   * Acknowledger une alerte
-   */
-  acknowledgeAlert: (alertId) => {
-    return apiClient.post(`/alerts/${alertId}/acknowledge`);
-  },
+  // Acknowledge alert
+  acknowledgeAlert: (id) =>
+      apiClient.post(`/alerts/${id}/acknowledge`),
+
+  // Get alert rules
+  getAlertRules: () =>
+      apiClient.get('/alerts/rules'),
+
+  // Create alert rule
+  createAlertRule: (rule) =>
+      apiClient.post('/alerts/rules', rule),
+
+  // Update alert rule
+  updateAlertRule: (id, rule) =>
+      apiClient.put(`/alerts/rules/${id}`, rule),
+
+  // Delete alert rule
+  deleteAlertRule: (id) =>
+      apiClient.delete(`/alerts/rules/${id}`),
+
+  // Get alert history
+  getAlertHistory: (params) =>
+      apiClient.get('/alerts/history', { params }),
 };
 
 // ============================================================================
-// UTILITY FUNCTIONS
+// CONNECTORS API
 // ============================================================================
 
-/**
- * Vérifier si l'API est accessible (health check)
- */
-export const checkApiHealth = async () => {
-  try {
-    const response = await axios.get(`${API_BASE_URL.replace('/api', '')}/actuator/health`, {
-      timeout: 5000,
-    });
-    return response.status === 200;
-  } catch (error) {
-    console.error('API health check failed:', error);
-    return false;
-  }
+export const connectorsApi = {
+  // Get all connectors
+  getConnectors: () => apiClient.get('/connectors'),
+
+  // Get connector details
+  getConnectorDetails: (connectorName) =>
+      apiClient.get(`/connectors/${connectorName}`),
+
+  // Get connector metrics
+  getConnectorMetrics: (connectorName, timeRange) =>
+      apiClient.get(`/connectors/${connectorName}/metrics`, {
+        params: { timeRange }
+      }),
+
+  // Get connector logs
+  getConnectorLogs: (connectorName, params) =>
+      apiClient.get(`/connectors/${connectorName}/logs`, { params }),
 };
 
-/**
- * Formater une date pour l'API
- */
-export const formatDateForApi = (date) => {
-  return date.toISOString();
-};
+// ============================================================================
+// HEALTH CHECK
+// ============================================================================
 
-/**
- * Parser une réponse d'erreur
- */
-export const parseApiError = (error) => {
-  if (error.response?.data?.message) {
-    return error.response.data.message;
-  }
-  if (error.message) {
-    return error.message;
-  }
-  return 'Une erreur inconnue est survenue';
+export const healthApi = {
+  checkHealth: () => apiClient.get('/health'),
 };
 
 export default apiClient;
