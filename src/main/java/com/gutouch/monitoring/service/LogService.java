@@ -191,8 +191,19 @@ public class LogService {
                 return false;
             }
         }
-        
+        // Filtre sur le service (uniquement pour PROCESSING)
+        if (params.getService() != null && !params.getService().isEmpty()) {
+            // Le filtre service ne s'applique que pour les logs PROCESSING
+            if ("PROCESSING".equals(log.getType())) {
+                if (log.getService() == null ||
+                        !log.getService().toLowerCase().contains(params.getService().toLowerCase())) {
+                    return false;
+                }
+            }
+        }
+
         return true;
+
     }
 
     /**

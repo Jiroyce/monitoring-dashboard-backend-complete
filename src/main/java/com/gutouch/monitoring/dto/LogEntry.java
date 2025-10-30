@@ -33,4 +33,5 @@ public class LogEntry {
     private String error;
     private String messageId;
     private String endToEndId;
+    private String service;
 }

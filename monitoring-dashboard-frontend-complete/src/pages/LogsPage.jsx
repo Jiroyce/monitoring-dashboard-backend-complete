@@ -56,9 +56,9 @@ const LogsPage = () => {
     clientIp: '',
     sortBy: 'timestamp',
     sortOrder: 'desc',
-    // AJOUT: Filtres de date pour les logs récents
-    startTime: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 dernières heures par défaut
-    endTime: new Date().toISOString() // Maintenant
+    // CORRECTION: Utiliser les timestamps en millisecondes pour éviter les problèmes de timezone
+    startTime: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    endTime: new Date().toISOString()
   });
 
   const [showFilters, setShowFilters] = useState(false);

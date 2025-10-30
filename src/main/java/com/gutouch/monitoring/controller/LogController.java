@@ -50,6 +50,9 @@ public class LogController {
             
             @Parameter(description = "Filtrer par IP client")
             @RequestParam(required = false) String clientIP,
+
+            @Parameter(description = "Filtrer par service (uniquement pour logs PROCESSING)")
+            @RequestParam(required = false) String service,
             
             @Parameter(description = "Date/heure de début (ISO 8601)")
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startTime,
@@ -81,6 +84,7 @@ public class LogController {
                     .minLatency(minLatency)
                     .maxLatency(maxLatency)
                     .clientIp(clientIP)
+                    .service(service)
                     .startTime(startTime)
                     .endTime(endTime)
                     .page(page)

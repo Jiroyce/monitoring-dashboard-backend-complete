@@ -103,111 +103,63 @@ const AnalyticsPage = () => {
 
   const loadComparison = async () => {
     try {
-      // Simuler des données de comparaison (à remplacer par l'API réelle)
-      setComparisonData({
-        period1: {
-          name: 'Cette semaine',
-          requests: 125430,
-          avgLatency: 45.2,
-          errorRate: 1.2,
-          successRate: 98.8
-        },
-        period2: {
-          name: 'Semaine dernière',
-          requests: 118920,
-          avgLatency: 52.8,
-          errorRate: 2.1,
-          successRate: 97.9
-        },
-        changes: {
-          requests: 5.5,
-          latency: -14.4,
-          errorRate: -42.9,
-          successRate: 0.9
-        }
-      });
+      const response = await analyticsApi.comparePeriods('current', 'previous', null);
+      setComparisonData(response.data);
     } catch (error) {
       console.error('Error loading comparison:', error);
+      toast.error('Erreur lors du chargement de la comparaison');
     }
   };
 
   const loadHeatmap = async () => {
     try {
-      // Simuler des données de heatmap
-      const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-      const hours = Array.from({ length: 24 }, (_, i) => i);
+      const daysMap = {
+        '7d': 7,
+        '14d': 14,
+        '30d': 30
+      };
+      const days = daysMap[timeRange] || 7;
 
-      const data = days.map(day => ({
-        day,
-        hours: hours.map(hour => ({
-          hour,
-          requests: Math.floor(Math.random() * 1000) + 200,
-          level: getTrafficLevel(Math.floor(Math.random() * 1000) + 200)
-        }))
-      }));
-
-      setHeatmapData(data);
+      const response = await analyticsApi.getHeatmap(days, null);
+      setHeatmapData(response.data);
     } catch (error) {
       console.error('Error loading heatmap:', error);
+      toast.error('Erreur lors du chargement de la heatmap');
     }
   };
 
   const loadTopClients = async () => {
     try {
-      // Simuler des données de top clients
-      setTopClientsData([
-        { ip: '192.168.1.10', requests: 12543, errors: 23, avgLatency: 42.5 },
-        { ip: '10.0.0.15', requests: 9821, errors: 45, avgLatency: 38.2 },
-        { ip: '172.16.0.8', requests: 7654, errors: 12, avgLatency: 51.3 },
-        { ip: '192.168.2.20', requests: 6432, errors: 67, avgLatency: 62.1 },
-        { ip: '10.1.1.5', requests: 5321, errors: 8, avgLatency: 35.8 },
-        { ip: '172.20.0.12', requests: 4987, errors: 34, avgLatency: 48.9 },
-        { ip: '192.168.3.30', requests: 4321, errors: 19, avgLatency: 44.2 },
-        { ip: '10.2.2.25', requests: 3876, errors: 5, avgLatency: 32.1 },
-        { ip: '172.25.0.18', requests: 3245, errors: 28, avgLatency: 55.7 },
-        { ip: '192.168.4.40', requests: 2987, errors: 15, avgLatency: 41.3 }
-      ]);
+      const response = await analyticsApi.getTopClients(10, timeRange, null);
+      setTopClientsData(response.data);
     } catch (error) {
       console.error('Error loading top clients:', error);
+      toast.error('Erreur lors du chargement des top clients');
     }
   };
 
   const loadTrends = async () => {
     try {
-      // Simuler des données de tendances
-      const last30Days = Array.from({ length: 30 }, (_, i) => {
-        const date = new Date();
-        date.setDate(date.getDate() - (29 - i));
-        return {
-          date: date.toISOString(),
-          requests: Math.floor(Math.random() * 5000) + 10000,
-          errorRate: Math.random() * 3,
-          avgLatency: Math.random() * 30 + 30,
-          successRate: 100 - (Math.random() * 3)
-        };
-      });
+      const daysMap = {
+        '7d': 7,
+        '14d': 14,
+        '30d': 30
+      };
+      const days = daysMap[timeRange] || 30;
+
+      // Charger les tendances pour requests
+      const trendsResponse = await analyticsApi.getTrends('requests', days, null);
+
+      // Charger les anomalies
+      const anomaliesResponse = await analyticsApi.getAnomalies(days, null);
 
       setTrendsData({
-        requests: last30Days,
-        anomalies: [
-          {
-            date: last30Days[15].date,
-            metric: 'Error Rate',
-            value: 5.2,
-            description: 'Pic d\'erreurs détecté',
-            rootCause: 'Problème de connexion BigTable temporaire'
-          },
-          {
-            date: last30Days[22].date,
-            metric: 'Latency',
-            value: 85.3,
-            description: 'Latence élevée',
-            rootCause: 'Augmentation du trafic pendant les heures de pointe'
-          }
-        ]
+        requests: trendsResponse.data.data || [],
+        anomalies: anomaliesResponse.data || []
       });
     } catch (error) {
       console.error('Error loading trends:', error);
+      toast.error('Erreur lors du chargement des tendances');
     }
   };
 
