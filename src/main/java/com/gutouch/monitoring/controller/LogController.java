@@ -84,7 +84,6 @@ public class LogController {
                     .minLatency(minLatency)
                     .maxLatency(maxLatency)
                     .clientIp(clientIP)
-                    .service(service)
                     .startTime(startTime)
                     .endTime(endTime)
                     .page(page)

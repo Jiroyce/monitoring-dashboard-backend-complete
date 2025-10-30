@@ -29,7 +29,6 @@ public class LogSearchParams {
     private Integer minLatency;
     private Integer maxLatency;
     private String clientIp;
-    private String service;              // ← AJOUTER CETTE LIGNE
     private Instant startTime;
     private Instant endTime;
     private Integer page = 1;
